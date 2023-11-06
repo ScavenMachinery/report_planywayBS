@@ -1,10 +1,9 @@
+import requests
+import pip
+pip.main(["install", "openpyxl"])
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
-import plotly.subplots as sp
-import locale
-from PIL import Image
 
 # Imposta la configurazione della pagina
 st.set_page_config(
