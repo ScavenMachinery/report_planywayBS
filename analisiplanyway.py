@@ -107,7 +107,7 @@ if tipo_analisi == "ANALISI TEAM :sunglasses:":
             if i + 1 < len(members):
                 member2 = members[i + 1]
                 member_df2 = df[df['Member'] == member2]
-                fig2 = px.bar(member_df2, x='Board', y='DurationHours', title=f'KPI per {member2}')
+                fig2 = px.histogram(member_df2, x='Board', y='DurationHours', title=f'KPI per {member2}')
                 fig2.update_layout(xaxis_title="Board", yaxis_title="DurationHours")
                 col2.plotly_chart(fig2)
     elif visualizzazione == "Pie Charts 🥧":
