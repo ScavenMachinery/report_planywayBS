@@ -66,11 +66,14 @@ total_duration_days = round(total_duration / 24,2)
 colA, colB, colC = st.columns(3)
 
 with colB:
-    st.metric(label='ORE',value=total_duration)
+    with st.container(border=True):
+        st.metric(label='ORE',value=total_duration)
 with colA:
-    st.metric("MINUTI", total_duration_minutes)
+    with st.container(border=True):
+        st.metric("MINUTI", total_duration_minutes)
 with colC:
-    st.metric("GIORNI", total_duration_days)
+    with st.container(border=True):
+        st.metric("GIORNI", total_duration_days)
 
 
 
@@ -89,7 +92,7 @@ if tipo_analisi == "ANALISI TEAM :sunglasses:":
     kpi_columns = st.columns(4)
 
     for i, (member, duration) in enumerate(member_duration.items()):
-        kpi_columns[i % 4].metric(member, duration)
+            kpi_columns[i % 4].metric(member, duration)
 
     # Crea una selezione a radio per il tipo di visualizzazione
     visualizzazione = st.radio("Seleziona il tipo di visualizzazione:", ["Bar Charts 📊", "Pie Charts 🥧"])
@@ -154,30 +157,30 @@ elif tipo_analisi == "ANALISI LAVORAZIONI :necktie:":
     elif livello_analisi == "LIST LEVEL":
         st.write("_ANALISI LIST LEVEL_")
 
-        # Raggruppa il DataFrame per la colonna "List" e calcola la somma di "DurationHours" per ciascun valore unico
-        list_level_data = df.groupby('List')['DurationHours'].sum().reset_index()
+        # Raggruppa il DataFrame per le colonne "List" e "Member" e calcola la somma di "DurationHours"
+        list_level_data = df.groupby(['List', 'Member'])['DurationHours'].sum().reset_index()
+
+        # Aggiungi un filtro per "Member"
+        selected_member = st.selectbox("Seleziona un Member", list_level_data['Member'].unique())
+
+        # Filtra i dati in base al Member selezionato
+        list_level_data_filtered = list_level_data[list_level_data['Member'] == selected_member]
 
         # Ordina il DataFrame in base a "DurationHours" in ordine decrescente
-        list_level_data = list_level_data.sort_values(by='DurationHours', ascending=False)
-
-        # Aggiungi un filtro per il numero di voci da visualizzare nei grafici
-        num_entries = st.slider("Seleziona il numero di voci di List da visualizzare nei grafici", 1, len(list_level_data), 20)
-
-        # Filtra le prime "num_entries" voci di "List"
-        top_list = list_level_data.head(num_entries)
+        list_level_data_filtered = list_level_data_filtered.sort_values(by='DurationHours', ascending=False)
 
         # Calcola la percentuale per il grafico a torta
-        top_list['Percentage'] = (top_list['DurationHours'] / top_list['DurationHours'].sum()) * 100
+        list_level_data_filtered['Percentage'] = (list_level_data_filtered['DurationHours'] / list_level_data_filtered['DurationHours'].sum()) * 100
 
         # Crea un grafico a barre
-        fig_bar = px.histogram(top_list, x='List', y='DurationHours', title=f'Analisi LIST LEVEL - Top {num_entries} List (Bar Chart)')
+        fig_bar = px.bar(list_level_data_filtered, x='List', y='DurationHours', title=f'Analisi LIST LEVEL - Member: {selected_member} (Bar Chart)')
         fig_bar.update_layout(xaxis_title="List", yaxis_title="Total DurationHours")
 
         # Visualizza il grafico a barre
         st.plotly_chart(fig_bar, use_container_width=True)
 
         # Crea il grafico a torta
-        fig_pie = px.pie(top_list, names='List', values='Percentage', title=f'Analisi LIST LEVEL - Top {num_entries} List (Pie Chart in %)')
+        fig_pie = px.pie(list_level_data_filtered, names='List', values='Percentage', title=f'Analisi LIST LEVEL - Member: {selected_member} (Pie Chart in %)')
 
         # Visualizza il grafico a torta
         st.plotly_chart(fig_pie, use_container_width=True)
@@ -205,4 +208,3 @@ elif tipo_analisi == "ANALISI LAVORAZIONI :necktie:":
 
         # Visualizza il secondo grafico a barre
         st.plotly_chart(fig_member_bar, use_container_width=True)
-       
