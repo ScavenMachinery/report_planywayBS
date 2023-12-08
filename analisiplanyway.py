@@ -170,7 +170,7 @@ elif tipo_analisi == "ANALISI LAVORAZIONI :necktie:":
         top_list['Percentage'] = (top_list['DurationHours'] / top_list['DurationHours'].sum()) * 100
 
         # Crea un grafico a barre
-        fig_bar = px.bar(top_list, x='List', y='DurationHours', title=f'Analisi LIST LEVEL - Top {num_entries} List (Bar Chart)')
+        fig_bar = px.histogram(top_list, x='List', y='DurationHours', title=f'Analisi LIST LEVEL - Top {num_entries} List (Bar Chart)')
         fig_bar.update_layout(xaxis_title="List", yaxis_title="Total DurationHours")
 
         # Visualizza il grafico a barre
@@ -192,7 +192,7 @@ elif tipo_analisi == "ANALISI LAVORAZIONI :necktie:":
         filtered_df = df[df['List'] == selected_list]
 
         # Crea un grafico a barre con "Card" in X e "DurationHours" in Y
-        fig_bar = px.bar(filtered_df, x='Card', y='DurationHours', title=f'Analisi CARD LEVEL - List: {selected_list} (Bar Chart)')
+        fig_bar = px.histogram(filtered_df, x='Card', y='DurationHours', title=f'Analisi CARD LEVEL - List: {selected_list} (Bar Chart)')
         fig_bar.update_layout(xaxis_title="Card", yaxis_title="DurationHours")
 
         # Visualizza il grafico a barre principale
@@ -200,7 +200,7 @@ elif tipo_analisi == "ANALISI LAVORAZIONI :necktie:":
 
         # Crea un secondo grafico a barre con "Member" in X, "DurationHours" in Y, e colori diversi per ogni "Member"
         member_bar_data = filtered_df.groupby('Member')['DurationHours'].sum().reset_index()
-        fig_member_bar = px.bar(member_bar_data, x='Member', y='DurationHours', title=f'Analisi CARD LEVEL - List: {selected_list} (Member Bar Chart)', color='Member')
+        fig_member_bar = px.histogram(member_bar_data, x='Member', y='DurationHours', title=f'Analisi CARD LEVEL - List: {selected_list} (Member Bar Chart)', color='Member')
         fig_member_bar.update_layout(xaxis_title="Member", yaxis_title="DurationHours")
 
         # Visualizza il secondo grafico a barre
